@@ -1,0 +1,18 @@
+---
+site_name: "dant-blog"
+server_name: "dant.blog"
+root_dir: "/var/www/{{ site_name }}"
+ssl_cert_location: "/var/www/{{ site_name }}-ssl/ssl-bundle.crt"
+ssl_cert_key_location: "/var/www/{{ site_name }}-ssl/cert.pem"
+wordpress_source: "https://wordpress.org/latest.tar.gz"
+php_fpm_socket: unix:/run/php/php7.2-fpm.sock
+
+#ssl_certificate /var/www/dant-blog-ssl/ssl-bundle.crt;
+#ssl_certificate_key /var/www/dant-blog-ssl/dant_blog.pem;
+
+# .env config
+db_name: "dantblog"
+db_user: "dantblog"
+db_host: "localhost:3306"
+db_pass: "{{ vault_db_pass }}"
+db_string: "mysql://{{ db_user | urlencode }}:{{ db_pass | urlencode }}@{{ db_host }}/{{ db_name }}"

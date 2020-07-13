@@ -1,0 +1,50 @@
+---
+- name: Check type of {{ root_dir }}
+  stat:
+    path: "{{ root_dir }}"
+  register: dir
+
+- name: Ensure .ssh directory exists
+  file:
+    path: /var/www/.ssh
+    state: directory
+    mode: 0700
+    owner: www-data
+    group: www-data
+
+- name: Ensure setfacl support is present
+  package: name=acl
+
+- name: Ensure GitHub deploy key is present on the server
+  copy:
+    src: vars/git_private_key
+    dest: /var/www/.ssh/deploy_key
+    mode: 0600
+    owner: www-data
+    group: www-data
+
+- name: Install {{ git_repo_source }} site to {{ root_dir }}
+  git:
+    repo: "{{ git_repo_source }}"
+    dest: "{{ root_dir }}"
+    force: yes
+    update: yes
+    accept_hostkey: yes
+    key_file: /var/www/.ssh/deploy_key
+
+- name: Ensure GitHub deploy key is present on the server
+  copy:
+    src: vars/git_command_private_key
+    dest: /var/www/.ssh/smite_stats_command
+    mode: 0600
+    owner: www-data
+    group: www-data
+
+- name: Install {{ git_command_repo_source }} site to {{ root_dir }}/src/Command/Crawlers
+  git:
+    repo: "{{ git_command_repo_source }}"
+    dest: "{{ root_dir }}/src/Command/Crawlers"
+    force: yes
+    update: yes
+    accept_hostkey: yes
+    key_file: /var/www/.ssh/smite_stats_command

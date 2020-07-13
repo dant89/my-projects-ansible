@@ -1,0 +1,31 @@
+---
+- name: reload nginx
+  service:
+    name: nginx
+    state: reloaded
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+- name: reload php7.2-fpm
+  service:
+    name: php7.2-fpm
+    state: reloaded
+  listen: reload php-fpm
+
+- name: restart php7.2-fpm
+  service:
+    name: php7.2-fpm
+    state: restarted
+  listen: restart php-fpm
+
+- name: re-read facts
+  setup:
+  listen: firewall updated
+
+- name: set flag indicating firewall config update required
+  set_fact:
+    firewall_updated: true
+  listen: firewall updated

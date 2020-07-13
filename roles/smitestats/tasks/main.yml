@@ -1,0 +1,9 @@
+---
+- import_tasks: prereqs.yml
+- include_vars: vault.yml
+- import_tasks: setup-mysql-db.yml
+- import_tasks: install-site.yml
+- import_tasks: find-symfony-console.yml
+- import_tasks: ensure-site-ownership.yml
+- import_tasks: set-acls.yml
+- import_tasks: install-site-config.yml

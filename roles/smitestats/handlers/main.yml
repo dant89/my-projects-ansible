@@ -1,0 +1,6 @@
+---
+- name: clear symfony cache
+  become_user: www-data
+  command: "{{ item.path }} cache:clear --env=prod"
+  with_items: "{{ console_loc.files }}"
+  notify: purge installations from disk

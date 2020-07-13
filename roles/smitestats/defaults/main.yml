@@ -1,0 +1,21 @@
+---
+site_name: "smitestats"
+site_url: "smitestats.com"
+root_dir: "/var/www/{{ site_name }}"
+cache_dir: "{{ root_dir }}/var/cache"
+log_dir: "{{ root_dir }}/var/logs"
+web_dir: "{{ root_dir }}/public"
+git_repo_source: git@github.com:dant89/smite-stats.git
+git_command_repo_source: git@github.com:dant89/smite-stats-commands.git
+nodejs_version: "10.x"
+php_fpm_socket: unix:/run/php/php7.2-fpm.sock
+ssl_cert_location: "/var/www/{{ site_name }}-ssl/ssl-bundle.crt"
+ssl_cert_key_location: "/var/www/{{ site_name }}-ssl/cert.key"
+# .env config
+smite_dev_id: "{{ vault_smite_dev_id }}"
+smite_auth_key: "{{ vault_smite_auth_key }}"
+smite_db_name: "smitestats"
+smite_db_user: "smitestats"
+smite_db_host: "localhost:3306"
+smite_db_pass: "{{ vault_smite_db_pass }}"
+smite_db_string: "mysql://{{ smite_db_user | urlencode }}:{{ smite_db_pass | urlencode }}@{{ smite_db_host }}/{{ smite_db_name }}"

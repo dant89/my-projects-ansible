@@ -1,0 +1,24 @@
+---
+- name: Ensure files created in symfony directories have default appropriate permissions for user www-data
+  acl:
+    default: yes
+    entity: www-data
+    etype: user
+    name: "{{item}}"
+    permissions: rwX
+    state: present
+    recursive: yes
+  with_items:
+    - "{{ root_dir }}"
+
+- name: Ensure directories have appropriate permissions for user www-data
+  acl:
+    default: no
+    entity: www-data
+    etype: user
+    name: "{{ item }}"
+    permissions: rwX
+    state: present
+    recursive: yes
+  with_items:
+    - "{{ root_dir }}"

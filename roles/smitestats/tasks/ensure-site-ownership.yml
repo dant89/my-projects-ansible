@@ -1,0 +1,21 @@
+- name: Ensure ownership of symfony site belongs to www-data
+  file:
+    state: directory
+    name: "{{ root_dir }}"
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+- name: Create cache directory
+  file:
+    state: directory
+    name: "{{ cache_dir }}"
+    owner: www-data
+    group: www-data
+
+- name: Create log directory
+  file:
+    state: directory
+    name: "{{ log_dir }}"
+    owner: www-data
+    group: www-data

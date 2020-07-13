@@ -1,0 +1,62 @@
+# {{ site_name }}
+server {
+        listen 80;
+        listen [::]:80;
+
+        server_name {{ site_url }} www.{{ site_url }};
+
+        # redirects both www and non-www to https
+        return 301 https://{{ site_url }}$request_uri;
+}
+
+server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+
+        ssl on;
+        ssl_certificate {{ ssl_cert_location }};
+        ssl_certificate_key {{ ssl_cert_key_location }};
+
+        server_name www.{{ site_url }};
+
+        # redirects www to non-www.
+        return 301 https://{{ site_url }}$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    root {{ web_dir }};
+    server_name {{ site_url }};
+
+    ssl on;
+    ssl_certificate {{ ssl_cert_location }};
+    ssl_certificate_key {{ ssl_cert_key_location }};
+
+    access_log /var/log/nginx/{{ site_name }}.log;
+    error_log /var/log/nginx/{{ site_name }}_error.log notice;
+
+    index index.php;
+
+    location / {
+            try_files $uri /index.php$is_args$args;
+    }
+
+    location ~ ^/index\.php(/|$) {
+            fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+            fastcgi_split_path_info ^(.+\.php)(/.*)$;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+            fastcgi_param DOCUMENT_ROOT $realpath_root;
+            #fixes timeouts
+            fastcgi_read_timeout 180;
+            internal;
+    }
+
+    # return 404 for all other php files not matching the front controller
+    # this prevents access to other php files you don't want to be accessible.
+    location ~ \.php$ {
+            return 404;
+    }
+}

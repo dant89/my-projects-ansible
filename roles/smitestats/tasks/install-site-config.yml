@@ -1,0 +1,65 @@
+---
+- name: Create SSL config directory  "{{ root_dir }}-ssl"
+  file:
+    path: "{{ root_dir }}-ssl"
+    state: directory
+    mode: '0755'
+
+- name: Install SSL certificate
+  template:
+    src: "bundle.crt"
+    dest: "{{ ssl_cert_location }}"
+    owner: www-data
+    group: www-data
+    mode: "0660"
+
+- name: Install SSL certificate key
+  template:
+    src: "cert.key"
+    dest: "{{ ssl_cert_key_location }}"
+    owner: www-data
+    group: www-data
+    mode: "0660"
+
+- name: Install site configuration
+  template:
+    src: "site_nginx.cfg.j2"
+    dest: "/etc/nginx/sites-available/{{ site_name }}.cfg"
+    owner: www-data
+    group: www-data
+    mode: "0664"
+
+- name: Enable site configuration
+  file:
+    src: "/etc/nginx/sites-available/{{ site_name }}.cfg"
+    dest: "/etc/nginx/sites-enabled/{{ site_name }}.cfg"
+    owner: www-data
+    group: www-data
+    state: link
+  notify:
+    - reload nginx
+
+- name: Install .env.local
+  template:
+    src: env.local.j2
+    dest: "{{ root_dir }}/.env"
+    owner: www-data
+    group: www-data
+    mode: "0660"
+
+- name: Run composer install
+  become_user: www-data
+  composer:
+    command: install
+    working_dir: "{{ root_dir }}"
+
+- name: Run doctrine migrations
+  become_user: www-data
+  command: "{{ item.path }} doctrine:migrations:migrate --no-interaction --env=prod"
+  with_items: "{{ console_loc.files }}"
+
+- name: Install Webpack Encore assets
+  command: "yarn encore production"
+  become_user: www-data
+  args:
+    chdir: "{{ root_dir }}"

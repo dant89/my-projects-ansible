@@ -1,0 +1,14 @@
+---
+- name: Find symfony console command
+  find:
+    file_type: "file"
+    patterns: "console"
+    paths:
+      - "{{ root_dir }}/bin"
+    recurse: yes
+  register: console_loc
+
+- name: Fail if no Symfony console is found
+  fail:
+    msg: Unable to find Symfony Console
+  when: not console_loc.matched

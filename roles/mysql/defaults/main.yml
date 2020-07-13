@@ -1,0 +1,2 @@
+---
+mysql_custom_conf_dir: "/etc/mysql/my.cnf"

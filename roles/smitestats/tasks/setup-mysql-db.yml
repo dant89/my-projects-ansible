@@ -1,0 +1,12 @@
+---
+- name: "Create a new database with name '{{ smite_db_name }}'"
+  mysql_db:
+      name: "{{ smite_db_name }}"
+      state: present
+
+- name: Create database user with all database privileges
+  mysql_user:
+      name: "{{ smite_db_user }}"
+      password: "{{ smite_db_pass }}"
+      priv: "{{ smite_db_name }}.*:ALL"
+      state: present

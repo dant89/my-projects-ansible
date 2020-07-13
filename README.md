@@ -1,1 +1,2 @@
-# smite-stats-ansible
+# Ansible
+### Deployment of my projects

@@ -12,6 +12,7 @@ php_fpm_socket: unix:/run/php/php7.2-fpm.sock
 ssl_cert_location: "/var/www/{{ site_name }}-ssl/ssl-bundle.crt"
 ssl_cert_key_location: "/var/www/{{ site_name }}-ssl/cert.key"
 # .env config
+app_secret: "{{ vault_app_secret }}"
 smite_dev_id: "{{ vault_smite_dev_id }}"
 smite_auth_key: "{{ vault_smite_auth_key }}"
 smite_db_name: "smitestats"

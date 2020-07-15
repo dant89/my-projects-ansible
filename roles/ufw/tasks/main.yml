@@ -1,0 +1,18 @@
+---
+- name: Ensure ufw is installed
+  apt:
+      name: ufw
+      state: present
+
+- name: Enable ufw
+  ufw:
+      state: enabled
+
+- name: Apply ufw allow rules
+  ufw:
+      rule: allow
+      name: "{{ item }}"
+  with_items:
+      - 'Nginx Full'
+      - 'OpenSSH'
+  notify: Reload ufw

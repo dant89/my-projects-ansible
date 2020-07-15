@@ -1,3 +1,62 @@
 ---
-- import_tasks: install-nginx.yml
-- import_tasks: install-php-fpm.yml
+- name: Install nginx
+  apt:
+      name: "nginx-extras"
+      state: "latest"
+  notify: restart nginx
+
+- name: Make sure nginx group exists
+  group:
+      name: nginx
+      state: present
+      system: yes
+
+- name: Make sure nginx user exists
+  user:
+      name: nginx
+      home: /var/lib/nginx
+      group: nginx
+      shell: "{{ nginx_shell }}"
+      state: present
+      system: yes
+
+- name: Make sure nginx log directory exists
+  file:
+      name: /var/log/nginx
+      state: directory
+      owner: www-data
+      group: www-data
+
+- name: Ensure that the nginx sites directory exists
+  file:
+      state: directory
+      dest: "/etc/nginx/sites-available/"
+      owner: nginx
+      group: nginx
+
+- name: Ensure the default nginx link is removed
+  file:
+      state: absent
+      path: "/etc/nginx/sites-enabled/default"
+
+- name: Ensure the default nginx conf is removed
+  file:
+      state: absent
+      path: "/etc/nginx/sites-available/default"
+
+- name: Ensure the default nginx web directory is removed
+  file:
+      state: absent
+      path: "/var/www/html"
+
+- name: Apply nginx server configuration
+  template:
+      src: nginx.conf.j2
+      dest: "{{ nginx_config_path }}"
+  notify: reload nginx
+
+- name: Ensure nginx is started and enabled to startup
+  service:
+      name: nginx
+      enabled: yes
+      state: started

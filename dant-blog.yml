@@ -2,4 +2,4 @@
 - hosts: 100tb
   become: true
   roles:
-      - blog
+      - dant-blog

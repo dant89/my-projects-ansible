@@ -1,0 +1,13 @@
+---
+- name: rload ufw
+  ufw:
+      state: reloaded
+
+- name: re-read facts
+  setup:
+  listen: firewall updated
+
+- name: set flag indicating firewall config update required
+  set_fact:
+      firewall_updated: true
+  listen: firewall updated

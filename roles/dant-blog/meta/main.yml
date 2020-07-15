@@ -1,4 +1,6 @@
 ---
 dependencies:
+    - role: ufw
     - role: nginx
+    - role: php-fpm
     - role: mysql

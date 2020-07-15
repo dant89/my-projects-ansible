@@ -3,6 +3,7 @@ nginx_version: 1.16.1-r1
 nginx_sendfile: true
 nginx_config_path: /etc/nginx/nginx.conf
 nginx_shell: /usr/sbin/nologin
+redis_conf_path: /etc/redis/redis.conf
 php_version: "php7.2"
 php_targets_all:
   Ubuntu:

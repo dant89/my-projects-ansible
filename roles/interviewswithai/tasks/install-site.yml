@@ -1,0 +1,43 @@
+---
+- name: Check type of {{ root_dir }}
+  stat:
+    path: "{{ root_dir }}"
+  register: dir
+
+- name: Ensure setfacl support is present
+  package: name=acl
+
+- name: Remove /tmp Wordpress directory
+  file:
+    path: "/tmp/wordpress-zip"
+    state: absent
+
+- name: Create /tmp Wordpress directory
+  file:
+    path: "/tmp/wordpress-zip"
+    state: directory
+    mode: '0755'
+
+- name: Download and extract Wordpress into /tmp
+  unarchive:
+    src: "{{ wordpress_source }}"
+    dest: "/tmp/wordpress-zip"
+    remote_src: yes
+    validate_certs: no
+    owner: www-data
+    mode: '0755'
+
+- name: Create "{{ root_dir }}" directory
+  file:
+    path: "{{ root_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy Wordpress into {{ root_dir }}
+  become: yes
+  copy:
+    src: "/tmp/wordpress-zip/wordpress/"
+    dest: "{{ root_dir }}"
+    remote_src: yes
+    owner: www-data
+    mode: '0755'

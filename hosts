@@ -1,2 +1,2 @@
 [100tb]
-69.36.182.157
+69.36.182.157 ansible_ssh_user=squatho15

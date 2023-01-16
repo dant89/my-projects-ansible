@@ -4,16 +4,16 @@ nginx_sendfile: true
 nginx_config_path: /etc/nginx/nginx.conf
 nginx_shell: /usr/sbin/nologin
 redis_conf_path: /etc/redis/redis.conf
-php_version: "php7.2"
+php_version: "php8.1"
 php_targets_all:
   Ubuntu:
-    - "php7-2"
+    - "php8-1"
 php_packages: # The package versions that corresponds to targets
-  "php7-2":
-    module: "php7.2"
-    slot: "7.2"
-    version: 7.2.24
-    install: "{{ 'php7-2' in php_targets }}"
+  "php8.1":
+    module: "php8.1"
+    slot: "8.1"
+    version: 8.1.8
+    install: "{{ 'php8-1' in php_targets }}"
 facts_path: /etc/ansible/facts.d
 firewall_role: nginx
 nginx_firewall_rules:

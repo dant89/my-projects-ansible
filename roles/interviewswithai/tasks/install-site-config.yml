@@ -1,0 +1,40 @@
+---
+- name: Create SSL config directory  "{{ root_dir }}-ssl"
+  file:
+    path: "{{ root_dir }}-ssl"
+    state: directory
+    mode: '0755'
+
+- name: Install SSL certificate
+  template:
+    src: ssl-bundle.cert
+    dest: "{{ ssl_cert_location }}"
+    owner: nginx
+    group: nginx
+    mode: "0660"
+
+- name: Install SSL certificate key
+  template:
+    src: cert.pem
+    dest: "{{ ssl_cert_key_location }}"
+    owner: nginx
+    group: nginx
+    mode: "0660"
+
+- name: Install site configuration
+  template:
+    src: "site_nginx.cfg.j2"
+    dest: "/etc/nginx/sites-available/{{ site_name }}.cfg"
+    owner: nginx
+    group: nginx
+    mode: "0664"
+
+- name: Enable site configuration
+  file:
+    src: "/etc/nginx/sites-available/{{ site_name }}.cfg"
+    dest: "/etc/nginx/sites-enabled/{{ site_name }}.cfg"
+    owner: nginx
+    group: nginx
+    state: link
+  notify:
+    - reload nginx

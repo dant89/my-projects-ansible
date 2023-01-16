@@ -1,0 +1,12 @@
+---
+- name: Install curl php extension
+  apt:
+      name: php-curl
+
+- name: Install imagick php extension
+  apt:
+      name: php-imagick
+
+- name: Install gd php extension
+  apt:
+      name: php-gd
